@@ -1,0 +1,10 @@
+{
+  "name": "slackoverflow",
+  "version": "1.0.0",
+  "description": "A Stack-Overflow-esque service for Slack",
+  "main": "src/server/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "meeshbhoombah <rohanmishra2017@gmail.com>"
+}
