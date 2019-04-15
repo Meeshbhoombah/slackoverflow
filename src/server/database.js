@@ -1,4 +1,8 @@
 const sequelize = require('sequelize');
+const fs = require('fs');
+const path = require('path');
+
+const modelsPath = path.normalize(`${__dirname}/models`)
 
 function marshal(config) {
   return {
@@ -8,7 +12,7 @@ function marshal(config) {
   };
 };
 
-async function sync(config, opts) {
+function sync(config, opts) {
   const db = new sequelize(
     config.db.name,
     config.db.user,
@@ -16,8 +20,25 @@ async function sync(config, opts) {
     opts
   )
 
-  await db.sync()
-  .then((sync) => {
+  fs.readdirSync(modelsPath)
+  .filter(file => (file.indexOf('.') !== 0) && (file.indexOf('.map') === -1))
+  .forEach((file) => {
+    console.info(`⏳ LOAD ${file}`);
+
+    var model = db['import'](path.join(modelsPath, file));
+    db[model.name] = model;
+
+    console.info(`✅ LOAD ${file}`);
+  })
+
+  Object.keys(db).forEach(modelName => {
+    if (db[modelName].associate) {
+      db[modelName].associate(db);
+    }
+  });
+
+  db.sync()
+  .then(() => {
     console.log('✅ DATABASE SYNC');
     return db
   })
@@ -28,13 +49,13 @@ async function sync(config, opts) {
 
 
 module.exports = (app) => {
-  console.info("⏳ DATABASE SYNC");
-
   const config = app.config;
   // initalize sequelize with options from config 
   const opts = marshal(config);
 
-  // sync models to database
+  console.info("⏳ DATABASE SYNC");
+  // import models and sync to database
   const db = sync(config, opts);
+
   return db
 };

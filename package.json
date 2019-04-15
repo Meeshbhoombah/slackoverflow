@@ -7,7 +7,7 @@
     "build": "webpack --mode production",
     "start": "npm run build && node src/server/index.js",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
-    "server": "nodemon --exec babel-node -- src/server/slackoverflow.js",
+    "server": "nodemon --exec babel-node -- src/server/app.js",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "meeshbhoombah <rohanmishra2017@gmail.com>",
