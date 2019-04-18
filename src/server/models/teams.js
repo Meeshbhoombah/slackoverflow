@@ -3,7 +3,11 @@ module.exports = (sequelize, DataTypes) => {
     id: {
       type: DataTypes.STRING,
       primaryKey: true,
-      allowNull: false
+      allowNull: false,
+      unique: {
+        name: 'team_id',
+        msg: 'A Team with this ID already exists.',
+      }
     },
     token: { 
       type: DataTypes.STRING, 
@@ -15,6 +19,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     chanName: DataTypes.STRING, 
+  },  {
+    tableName: 'teams',
+    underscored: true,
   });
 
   return Team

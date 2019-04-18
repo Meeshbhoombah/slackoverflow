@@ -37,14 +37,7 @@ function sync(config, opts) {
     }
   });
 
-  db.sync()
-  .then(() => {
-    console.log('✅ DATABASE SYNC');
-    return db
-  })
-  .catch((err) => {
-    console.error('Unable to sync with Postgres database:', err);
-  });
+  return db
 };
 
 
