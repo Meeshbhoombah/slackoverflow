@@ -8,7 +8,7 @@ module.exports = (app) => {
 
   // generate Slack oauth url
   app.get('/api/team/authorize', function(req, res, next) {
-    
+     
   });
 
   // exchange access code for Team info, create/push to db, return deep link 
@@ -21,18 +21,9 @@ module.exports = (app) => {
     slack.oauth.access(id, secret, code)
     .then((rsp) => {
       console.log(rsp);
-        /*
-        teams.create({
-          id:,
-          token:,
-          name:,
-          chanId:,
-          chanName:,
-        })
-        */
     })
     .catch((err) => {
-      console.error('Unable to authorize token', err);
+      console.error(`Unable to authorize ${code}:`, err);
     })
   });
 };

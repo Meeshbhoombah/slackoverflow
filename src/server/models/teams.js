@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     chanName: DataTypes.STRING, 
-  },  {
+  }, {
     tableName: 'teams',
     underscored: true,
   });

@@ -20,10 +20,12 @@ app.config = config();
 const database = require('./database');
 app.db = database(app);
 
+// attach routes - oauth
 const bind = require('./routes/bind');
 bind(app);
 
 // connect to pg db, create/update models 
+console.log('⏳ DATABASE SYNC');
 app.db.sync()
 .then(() => {
   console.log('✅ DATABASE SYNC');

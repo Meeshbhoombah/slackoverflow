@@ -12,7 +12,7 @@ function marshal(config) {
   };
 };
 
-function sync(config, opts) {
+function init(config, opts) {
   const db = new sequelize(
     config.db.name,
     config.db.user,
@@ -23,12 +23,12 @@ function sync(config, opts) {
   fs.readdirSync(modelsPath)
   .filter(file => (file.indexOf('.') !== 0) && (file.indexOf('.map') === -1))
   .forEach((file) => {
-    console.info(`⏳ LOAD ${file}`);
+    console.info(`⏳ LOAD models/${file}`);
 
     var model = db['import'](path.join(modelsPath, file));
     db[model.name] = model;
 
-    console.info(`✅ LOAD ${file}`);
+    console.info(`✅ LOAD models/${file}`);
   })
 
   Object.keys(db).forEach(modelName => {
@@ -46,9 +46,8 @@ module.exports = (app) => {
   // initalize sequelize with options from config 
   const opts = marshal(config);
 
-  console.info("⏳ DATABASE SYNC");
   // import models and sync to database
-  const db = sync(config, opts);
+  const db = init(config, opts);
 
   return db
 };
