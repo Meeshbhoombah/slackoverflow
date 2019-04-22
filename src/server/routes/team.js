@@ -4,8 +4,8 @@ const base = 'http://slack.com/oauth/authorize'
 
 module.exports = (app) => {
   const config = app.config;
-  const teams = app.db['Teams'];
-
+  const Team = app.db['Team'];
+  
   // generate Slack oauth url
   app.get('/api/team/authorize', function(req, res, next) {
      
