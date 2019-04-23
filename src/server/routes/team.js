@@ -21,9 +21,11 @@ module.exports = (app) => {
     slack.oauth.access(id, secret, code)
     .then((rsp) => {
       console.log(rsp);
+      console.log(rsp.body.authToken);
+      console.log(rsp.body.auth_token);
     })
     .catch((err) => {
-      console.error(`Unable to authorize ${code}:`, err);
+      console.error(`Unable to authorize ${code}:`, (err.messages || err));
     })
   });
 };
