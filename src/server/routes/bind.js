@@ -1,9 +1,9 @@
-const teams = require('./team');
-const events = require('./team');
+const oauth = require('./oauth');
+const events = require('./event');
 
 module.exports = (app) => {
   // enables Slack OAuth 2.0 installation flow
-  teams(app);
-  // `member-joined-channel`
+  oauth(app);
+  // handle events
   events(app);
 }
