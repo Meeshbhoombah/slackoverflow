@@ -16,11 +16,14 @@ const app = express();
 const config = require('./config')
 app.config = config();
 
+// handle JSON body
+app.use(express.json());
+
 // configure orm, attach pg db, import models
 const database = require('./database');
 app.db = database(app);
 
-// attach routes - oauth
+// attach routes - oauth, events
 const bind = require('./routes/bind');
 bind(app);
 
@@ -40,3 +43,6 @@ app.db.sync()
 .catch((err) => {
   console.error('Unable to sync with Postgres database:', err);
 });
+
+// testing
+module.exports = app;
