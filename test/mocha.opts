@@ -1,0 +1,4 @@
+--exit
+--recursive
+--slow 2
+--timeout 10000
