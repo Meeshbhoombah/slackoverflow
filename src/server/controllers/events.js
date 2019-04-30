@@ -1,5 +1,5 @@
 function userJoinChan(config, db, evt) {
-  console.log('Test');
+  console.log('MEMBER JOINED CHANNEL')
 };
 
 module.exports = (evt) => {
