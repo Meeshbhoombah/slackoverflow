@@ -41,7 +41,7 @@ app.db.sync()
   });
 })
 .catch((err) => {
-  console.error('Unable to sync with Postgres database:', err);
+  console.error('Unable to sync with database:', err);
 });
 
 // testing
