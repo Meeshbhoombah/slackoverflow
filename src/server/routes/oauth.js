@@ -11,12 +11,13 @@ module.exports = (app) => {
 
     oauth.authorizeTeam(id, secret, scopes)
     .then((url) => {
-        console.log(url);
-        res.send(url);
+      console.log(url);
+      res.send(url);
     })
     .catch((err) => {
       console.error(`Unable to authorize ${code}:`, (err.messages || err));
     });
+
   });
 
   // exchange access code for Team info, create/push to db, return deep link 
@@ -24,16 +25,21 @@ module.exports = (app) => {
     const config = app.config;
     const db = app.db;
 
-    let code = req.body.code;
-    let id = config.slack.id;
-    let secret = config.slack.secret;
+    let accessCode = req.body.code;
 
-    oauth.integrateTeam(config, db, code, id, secret)
-    .then((deepLink) => {
-      res.send(deepLink);
-    })
-    .catch((err) => {
-      console.error(`Unable to authorize ${code}:`, (err.messages || err));
-    });
+    if (accessCode !== null) {
+      let clientId = config.slack.id;
+      let clientSecret = config.slack.secret;
+
+      oauth.integrateTeam(config, db, accessCode, clientId, clientSecret) 
+      .then((deepLink) => {
+        res.send(deepLink);
+      })
+      .catch((err) => {
+        console.error(`Unable to authorize ${code}:`, (err.messages || err));
+      });
+    } else {
+        console.error(`Unable to authorize ${code}:`, (err.messages || err));   
+    }
   });
 };
