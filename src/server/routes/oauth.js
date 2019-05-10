@@ -1,31 +1,39 @@
-const slack = require('slack');
-
-const base = 'http://slack.com/oauth/authorize'
+const oauth = require('../controllers/oauth');
 
 module.exports = (app) => {
-  const config = app.config;
-  const Team = app.db['Team'];
-  
   // generate Slack oauth url
   app.get('/api/team/authorize', function(req, res, next) {
-     
-  });
+    const config = app.config;
 
-  // exchange access code for Team info, create/push to db, return deep link 
-  app.get('/api/team/integrate', function(req, res, next) {
-    const code = req.body.code;
+    let id = config.slack.id;
+    let secret = config.slack.secret;
+    let scopes = config.slack.scopes;
 
-    const id = config.slack.client.id;
-    const secret = config.slack.client.secret;
-
-    slack.oauth.access(id, secret, code)
-    .then((rsp) => {
-      console.log(rsp);
-      console.log(rsp.body.authToken);
-      console.log(rsp.body.auth_token);
+    oauth.authorizeTeam(id, secret, scopes)
+    .then((url) => {
+        console.log(url);
+        res.send(url);
     })
     .catch((err) => {
       console.error(`Unable to authorize ${code}:`, (err.messages || err));
+    });
+  });
+
+  // exchange access code for Team info, create/push to db, return deep link 
+  app.post('/api/team/integrate', function(req, res, next) {
+    const config = app.config;
+    const db = app.db;
+
+    let code = req.body.code;
+    let id = config.slack.id;
+    let secret = config.slack.secret;
+
+    oauth.integrateTeam(config, db, code, id, secret)
+    .then((deepLink) => {
+      res.send(deepLink);
     })
+    .catch((err) => {
+      console.error(`Unable to authorize ${code}:`, (err.messages || err));
+    });
   });
 };

@@ -1,4 +1,5 @@
 // TODO: PROD parse DATABASE_URL
+// TODO: Load .env file if not loaded
 // Environment varible keys are in UPPERCASE
 
 const config = {
@@ -13,6 +14,12 @@ const config = {
     user: process.env.DBUSER,
     pass: process.env.DBPASS,
   },
+  slack: {
+    id:  process.env.SLACK_CLIENT_ID,   
+    secret: process.env.SLACK_CLIENT_SECRET,
+    signing: process.env.SLACK_SIGNING_SECRET,
+    scopes: process.env.SLACK_SCOPES
+  }
 };
 
 module.exports = () => {
