@@ -21,12 +21,8 @@ async function integrateTeam(config, db, accessCode, clientId, clientSecret) {
 
     await slack.oauth.access(clientId, clientSecret, accessCode) 
     .then((res) => {
-      Team.create({
-        id: res.team_id,
-        name: res.team_name,
-        chanId:,
-        chanName:,
-      })
+      console.log(Team);
+      console.log(res);
     })
     .catch((err) => {
       reject(err);
