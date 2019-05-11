@@ -38,7 +38,7 @@ module.exports = (app) => {
         console.error(`🚨 FAILED Integrate ${accessCode}:`, (err.messages || err));
       });
     } else {
-        console.error(`🚨 FAILED Integrate ${accessCode}:`, (err.messages || err));   
+      console.error(`🚨 FAILED Integrate ${accessCode}:`, (err.messages || err));
     }
   });
 };

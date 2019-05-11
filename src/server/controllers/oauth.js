@@ -16,15 +16,21 @@ async function authorizeTeam(clientId, clientSecret, perms) {
 async function integrateTeam(config, db, accessCode, clientId, clientSecret) {
   const baseUri = 'https://slack.com/app_redirect?' //channel=%s&team=%s
 
-  let Team = db.Team;
-
   return new Promise(async (resolve, reject) => {
+    let Team = db.Team;
+
     await slack.oauth.access(clientId, clientSecret, accessCode) 
     .then((res) => {
+      Team.create({
+        id: res.team_id,
+        name: res.team_name,
+        chanId:,
+        chanName:,
+      })
     })
     .catch((err) => {
       reject(err);
-    })
+    });
   });
 };
 

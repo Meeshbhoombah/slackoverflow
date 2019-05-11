@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 
 render((
   <Router>
-      <App />
+      <App/>
   </Router>
 ), document.getElementById('root'));
 
