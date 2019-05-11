@@ -7,7 +7,7 @@ async function authorizeTeam(clientId, clientSecret, perms) {
     let uri = baseUri +
       'client_id=' + clientId +
       '&client_secret=' + clientSecret +
-      '&scopes=' + perms
+      '&scope=' + perms
 
     resolve(uri);
   });
