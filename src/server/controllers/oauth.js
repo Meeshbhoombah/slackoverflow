@@ -36,7 +36,7 @@ async function integrateTeam(config, db, accessCode, clientId, clientSecret) {
           },
           transaction: t
         })
-        .spread((team, created) => { // .create returns Promise<Model>
+        .spread((team, created) => { // .findOrCreate returns Promise<Model, boolean>
           const t = team.dataValues;
           const baseUri = 'https://slack.com/app_redirect?' 
           
