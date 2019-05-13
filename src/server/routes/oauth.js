@@ -11,7 +11,6 @@ module.exports = (app) => {
 
     oauth.authorizeTeam(clientId, clientSecret, perms)
     .then((url) => {
-      console.log(url);
       res.send(url);
     })
     .catch((err) => {
