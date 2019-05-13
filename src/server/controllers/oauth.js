@@ -6,7 +6,6 @@ async function authorizeTeam(clientId, clientSecret, perms) {
   return new Promise((resolve, reject) => {
     let uri = baseUri +
       'client_id=' + clientId +
-      '&client_secret=' + clientSecret +
       '&scope=' + perms
 
     resolve(uri);
