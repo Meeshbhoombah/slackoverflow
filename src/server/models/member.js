@@ -11,9 +11,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     username: DataTypes.STRING,
     name: DataTypes.STRING,
+    email: DataTypes.STRING,
     roleId: DataTypes.STRING,
     teamId: DataTypes.STRING
   }, {
+    hooks: {
+      afterUpdate: (user, options) => {
+        console.log(user);
+      }
+    },
     tableName: 'members',
     underscored: true,
   });

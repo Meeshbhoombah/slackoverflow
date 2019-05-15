@@ -1,34 +1,46 @@
-const slack = require('slack');
-
+const slack = require('slack'); 
 async function userJoinChan(config, db, evt) {
   return new Promise(async (resolve, reject) => {
     const Team = db.Team;
     const Member = db.Member;
     
-    let teamId = evt.team;
-    let memberId = evt.user;
+    let team = evt.team;
+    let member = evt.user;
 
-    Team.findOne({
+    Member.findOrCreate({
       where: {
-        id: teamId
+        id: member,
+        teamId: team
       },
-      include: [{ 
-        model: Member,
-        as: 'members',
-        where: { 
-          id: memberId 
-        } 
+      include: [{
+        model: Team,
+        as: 'team'
       }]
     })
-    .then((team) => {
-      console.log(team);
-      slack.users.profile.get({
-        user: memberId,
-        token: team.token
-      })
+    .spread(async (query, created) => {
+      if (created) {
+        console.log(query);
+
+        await slack.users.profile.get({ 
+          user: member,
+          token: query.team.token
+        })
+      } else {
+        resolve(query);
+      }
     })
     .then((res) => {
-      console.log(res);
+      Member.update({
+        where: {
+          id: member,
+          teamId: team
+        },
+        fields: {
+          username: res.display_name,
+          name: res.real_name,
+          email: res.email
+        }
+      }); 
     })
     .catch((err) => {
       reject(err);
