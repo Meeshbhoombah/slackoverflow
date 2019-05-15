@@ -24,5 +24,12 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
   });
 
+  Team.associate = function(models) {
+    Team.hasMany(models.Member, {
+      foreignKey: 'team_id',
+      as: 'members'
+    });
+  };
+
   return Team
 }

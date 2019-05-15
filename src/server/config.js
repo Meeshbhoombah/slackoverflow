@@ -12,7 +12,13 @@ const config = {
     name: process.env.DBNAME,
     user: process.env.DBUSER,
     pass: process.env.DBPASS,
-  },
+  }, 
+  slack: {
+    id:  process.env.SLACK_CLIENT_ID,   
+    secret: process.env.SLACK_CLIENT_SECRET,
+    signing: process.env.SLACK_SIGNING_SECRET,
+    scopes: process.env.SLACK_SCOPES
+  }
 };
 
 module.exports = () => {

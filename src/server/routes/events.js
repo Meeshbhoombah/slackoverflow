@@ -1,24 +1,29 @@
 const parse = require('../controllers/events');
 
 module.exports = (app) => {
-  const config = app.config;
-  const db = app.db;
-
   app.post('/event', function(req, res, next) {
-      const evt = req.body;
+      const config = app.config;
+      const db = app.db;
+
+      let evt = req.body;
 
       if (evt.type) {
         // get handler for event
         const handle = parse(evt);
 
         if (handle != undefined) {
-          // handle event
-          handle(config, db, evt);        
+          handle(config, db, evt)
+          .then((result) => {
+            res.send(result);
+          })
+          .catch((err) => {
+            console.error(`🚨 FAILED EVENT ${evt.Type}:`, (err.messages || err));
+          })
         } else {
-          next(); 
+          console.error(`🚨 FAILED EVENT ${evt.Type}: No such Event handler.`); 
         }
       } else {
-        next(); 
+        console.error(`🚨 FAILED EVENT: Request does not contain Event type.`);
       }
   });
 };

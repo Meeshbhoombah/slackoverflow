@@ -9,12 +9,16 @@
  *
  */
 
+console.log('🚨 STARTING SLACKOVERFLOW WITH CONFIG:')
+
 const express = require('express');
 const app = express();
 
 // load env vars - pg, Slack/admin secrets
 const config = require('./config')
 app.config = config();
+
+console.log(app.config);
 
 // handle JSON body
 app.use(express.json());
