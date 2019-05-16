@@ -12,20 +12,20 @@ async function userJoinChan(config, db, evt) {
         id: member,
         teamId: team
       },
-      include: [{
-        model: Team,
-        as: 'team'
-      }]
+      include: ['team']
     })
     .spread(async (query, created) => {
       if (created) {
         console.log(query);
-
+        console.log(query.team);
+        /*
         await slack.users.profile.get({ 
           user: member,
           token: query.team.token
         })
+        */
       } else {
+        console.log(query.team);
         resolve(query);
       }
     })
