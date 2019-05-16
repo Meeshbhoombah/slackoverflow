@@ -2,7 +2,7 @@ const sequelize = require('sequelize');
 const fs = require('fs');
 const path = require('path');
 
-const modelsPath = path.normalize(`${__dirname}/models`)
+const modelsPath = path.normalize(`${__dirname}/models`);
 
 function marshal(config) {
   return {
@@ -41,6 +41,28 @@ function init(config, opts) {
 };
 
 
+function seedRoles(db) {
+  const Role = db.Role;
+
+  let roles = [{
+    name: 'MEMBER',
+    isDefault: true,
+    canVerify: false
+  }, {
+    name: 'ADMINISTRATOR',
+    isDefault: true,
+    canVerify: true
+  }]
+
+  Role.findAll()
+  .then((roles) => {
+    if (roles == undefined || roles.length == 0) {
+      Role.bulkCreate(roles);   
+    }
+  });
+};
+
+
 module.exports = (app) => {
   const config = app.config;
   // initalize sequelize with options from config 
@@ -48,6 +70,9 @@ module.exports = (app) => {
 
   // import models and sync to database
   const db = init(config, opts);
+
+  // seed roles
+  seedRoles(db);
 
   return db
 };

@@ -17,7 +17,7 @@ module.exports = (app) => {
             res.send(result);
           })
           .catch((err) => {
-            console.error(`🚨 FAILED EVENT ${evt.Type}:`, (err.messages || err));
+            console.error(`🚨 FAILED EVENT ${evt.Type}:`, (err.message || err));
           })
         } else {
           console.error(`🚨 FAILED EVENT ${evt.Type}: No such Event handler.`); 
