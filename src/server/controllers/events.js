@@ -1,4 +1,5 @@
 const slack = require('slack'); 
+// const createOnboardMessage = require('../messages/onboard');
 
 async function userJoinChan(config, db, evt) {
   return new Promise(async (resolve, reject) => {
@@ -26,11 +27,11 @@ async function userJoinChan(config, db, evt) {
       if (channelId !== team.chanId) {
         throw new Error({ message: `Channel: ${chanId} not initalized` });
       } else if (team.members == undefined || team.members.length == 0) {
-        // no existing member matches Member ID/Team ID (therefore new memeber)
+        // no existing member matches Member ID/Team ID (therefore new member)
         await slack.users.profile.get({
           user: memberId,
           token: team.token
-        })
+        });
       } else {
         // Member already exists, do nothing, resolve Event
         resolve(team.members);
@@ -47,8 +48,12 @@ async function userJoinChan(config, db, evt) {
     })
     .then((member) => {
       // TODO: send onboard message
+      // need oauth complete - check if team available in scope
       console.log(member);
       resolve(member);
+      /*
+      let msg = createOnboardMessage(member);
+      */
     })
     .catch((err) => {
       reject(err);
