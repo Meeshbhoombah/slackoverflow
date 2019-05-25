@@ -34,6 +34,7 @@ async function userJoinChan(config, db, evt) {
         });
       } else {
         // Member already exists, do nothing, return existing member 
+        console.log('existing member');
         return resolve(team.members);
       }
     })
