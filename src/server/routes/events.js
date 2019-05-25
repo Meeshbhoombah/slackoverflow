@@ -7,23 +7,27 @@ module.exports = (app) => {
 
       let evt = req.body;
 
-      if (evt.type) {
-        // get handler for event
-        const handle = parse(evt);
+      // Handle URL verification challenge
+      if (evt.type == 'url_verification') {
+        return res.send({ 
+          challenge: evt.challenge 
+        });
+      }
 
-        if (handle != undefined) {
-          handle(config, db, evt)
-          .then((result) => {
-            res.send(result);
-          })
-          .catch((err) => {
-            console.error(`🚨 FAILED EVENT ${evt.Type}:`, (err.message || err));
-          })
-        } else {
-          console.error(`🚨 FAILED EVENT ${evt.Type}: No such Event handler.`); 
-        }
+      // get handler for event
+      const handle = parse(evt);
+
+      if (handle != undefined) {
+        handle(config, db, evt)
+        .then((result) => {
+          console.log(result);
+          res.send(result);
+        })
+        .catch((err) => {
+          console.error(`🚨 FAILED EVENT ${evt.Type}:`, (err.message || err));
+        })
       } else {
-        console.error(`🚨 FAILED EVENT: Request does not contain Event type.`);
+        console.error(`🚨 FAILED EVENT ${evt.Type}: No such Event handler.`); 
       }
   });
 };

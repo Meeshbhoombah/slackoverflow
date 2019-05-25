@@ -6,9 +6,9 @@ async function userJoinChan(config, db, evt) {
     const Team = db.Team;
     const Member = db.Member;
     
-    let teamId = evt.team;
-    let memberId = evt.user;
-    let channelId = evt.channel;
+    let teamId = evt.team_id;
+    let memberId = evt.event.user;
+    let channelId = evt.event.channel;
 
     Team.findOne({
       where: {
@@ -28,32 +28,30 @@ async function userJoinChan(config, db, evt) {
         throw new Error({ message: `Channel: ${chanId} not initalized` });
       } else if (team.members == undefined || team.members.length == 0) {
         // no existing member matches Member ID/Team ID (therefore new member)
-        await slack.users.profile.get({
+        return await slack.users.profile.get({
           user: memberId,
           token: team.token
         });
       } else {
-        // Member already exists, do nothing, resolve Event
-        resolve(team.members);
+        // Member already exists, do nothing, return existing member 
+        return resolve(team.members);
       }
     })
-    .then((res) => {
-      Member.create({
+    .then(async (res) => {
+      return await Member.create({
         id:         memberId,
-        username:   res.display_name,
-        name:       res.real_name,
-        email:      res.email,
+        username:   res.profile.display_name,
+        name:       res.profile.real_name,
+        email:      res.profile.email,
         teamId:     teamId,
       }) 
     })
     .then((member) => {
-      // TODO: send onboard message
-      // need oauth complete - check if team available in scope
-      console.log(member);
-      resolve(member);
       /*
+      TODO: send onboard message 
       let msg = createOnboardMessage(member);
       */
+      resolve(member);
     })
     .catch((err) => {
       reject(err);
@@ -66,5 +64,5 @@ module.exports = (evt) => {
     'member_joined_channel': userJoinChan
   };
 
-  return handlers[evt.type]
+  return handlers[evt.event.type]
 };
