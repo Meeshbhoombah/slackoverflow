@@ -1,5 +1,7 @@
 const slack = require('slack'); 
-// const createOnboardMessage = require('../messages/onboard');
+const onboardMsg = require('../messages/onboard');
+
+const Token = require('../utils').Token;
 
 async function userJoinChan(config, db, evt) {
   return new Promise(async (resolve, reject) => {
@@ -10,7 +12,7 @@ async function userJoinChan(config, db, evt) {
     let memberId = evt.event.user;
     let channelId = evt.event.channel;
 
-    Team.findOne({
+    await Team.findOne({
       where: {
         id: teamId
       },
@@ -24,17 +26,18 @@ async function userJoinChan(config, db, evt) {
       }]
     })
     .then(async (team) => {
+      getToken = Token(team.token);
+      
       if (channelId !== team.chanId) {
         throw new Error({ message: `Channel: ${chanId} not initalized` });
       } else if (team.members == undefined || team.members.length == 0) {
         // no existing member matches Member ID/Team ID (therefore new member)
         return await slack.users.profile.get({
           user: memberId,
-          token: team.token
+          token: getToken()
         });
       } else {
         // Member already exists, do nothing, return existing member 
-        console.log('existing member');
         return resolve(team.members);
       }
     })
@@ -47,12 +50,25 @@ async function userJoinChan(config, db, evt) {
         teamId:     teamId,
       }) 
     })
-    .then((member) => {
-      /*
-      TODO: send onboard message 
-      let msg = createOnboardMessage(member);
-      */
-      resolve(member);
+    .then(async (member) => {
+      // send onboard message 
+      const Role = db.Role;
+
+      return await onboardMsg(member, Role);
+    })
+    .spread(async (msg, attachment) => {
+      console.log(msg, attachment);
+      console.log(member);
+      return await slack.chat.postMessage({
+        token: getToken(), 
+        channel: member.id, 
+        text: msg,
+        attchments: attachment
+      });
+    })
+    .then((res) => {
+      console.log(res);
+      resolve(200);
     })
     .catch((err) => {
       reject(err);

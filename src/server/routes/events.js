@@ -7,7 +7,6 @@ module.exports = (app) => {
 
       let evt = req.body;
 
-      // Handle URL verification challenge
       if (evt.type == 'url_verification') {
         return res.send({ 
           challenge: evt.challenge 
@@ -20,7 +19,6 @@ module.exports = (app) => {
       if (handle != undefined) {
         handle(config, db, evt)
         .then((result) => {
-          console.log(result);
           res.send(result);
         })
         .catch((err) => {
