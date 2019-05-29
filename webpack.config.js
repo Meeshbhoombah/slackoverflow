@@ -2,7 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 
-const outputDirectory = "dist";
+const outputDirectory = "${__dirname}/dist";
 
 module.exports = {
   entry: ["./src/client/index.js"],
@@ -13,21 +13,24 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
-      },
-      {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+        ]
       },
       {
-        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-        use: {
-          loader: "url-loader?limit=100000"
+        test: /\.jsx?$/, 
+        loader: 'babel-loader',
+          exclude: /node_modules/,
+        query: {
+            presets: ['@babel/preset-env', '@babel/preset-react'] 
         }
+      },
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        loader: 'source-map-loader'
       }
     ]
   },
