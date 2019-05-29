@@ -21,6 +21,7 @@ const database = require('./database');
 app.db = database(app);
 
 app.use(express.json());
+app.use(express.static('public'));
 
 // attach routes - oauth
 const bind = require('./routes/bind');
